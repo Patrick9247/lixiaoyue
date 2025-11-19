@@ -56,16 +56,12 @@
 
         <!-- 数据库相关 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <groupId>com.tangzc</groupId>
+            <artifactId>mybatis-plus-ext-boot-starter</artifactId>
+            <version>3.5.5-EXT561</version>
         </dependency>
-        <!-- MyBatis-Plus 自动建表核心依赖（原生支持，无冲突） -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-extension</artifactId>
-            <version>3.5.3.1</version>
-        </dependency>
+
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
