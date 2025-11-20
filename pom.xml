@@ -46,11 +46,10 @@
             <optional>true</optional> <!-- 编译时生效，不传递依赖 -->
         </dependency>
 
-        <!-- 只保留这个 SpringDoc 依赖，其他 Swagger 相关全部删除 -->
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.15</version>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>3.0.2</version>
         </dependency>
 
 
@@ -77,6 +76,13 @@
             <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
+<!--        hutool-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-ai</artifactId>
+            <version>5.8.38</version>
+        </dependency>
+
         <!-- 参数校验（JDK8兼容版） -->
         <dependency>
             <groupId>javax.validation</groupId>

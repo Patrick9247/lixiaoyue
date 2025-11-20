@@ -14,6 +14,6 @@ public class JavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(JavaApplication.class, args);
         System.out.println("项目启动成功！访问地址：http://localhost:8080/api");
-        System.out.println("项目启动成功！访问接口地址：http://localhost:8080/api/swagger-ui/index.html");
+        System.out.println("项目启动成功！访问接口地址：http://localhost:8080/api/doc.html");
     }
 }

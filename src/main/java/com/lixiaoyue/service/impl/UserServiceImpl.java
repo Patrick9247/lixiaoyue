@@ -1,7 +1,7 @@
 package com.lixiaoyue.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lixiaoyue.common.convert.ConvertUtil;
 import com.lixiaoyue.mapper.UserMapper;
 import com.lixiaoyue.model.dto.UserDTO;
 import com.lixiaoyue.model.entity.User;
@@ -16,12 +16,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     UserMapper userMapper;
 
-    ConvertUtil convertUtil;
+
 
 
     @Override
     public void addUser(UserDTO userDTO) {
-        User user = ConvertUtil.convert(userDTO, User.class);
+        User user = new User();
+        BeanUtil.copyProperties(userDTO, user);
         userMapper.insert(user);
     }
 }
