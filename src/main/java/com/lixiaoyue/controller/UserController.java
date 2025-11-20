@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,6 +33,17 @@ public class UserController {
     public ResponseEntity<UserVO> addUser(@RequestBody UserVO userVO) {
         User user = new User();
         BeanUtil.copyProperties(userVO,user);
+        userService.save(user);
+        return ResponseEntity.ok(userVO);
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "注册")
+    public ResponseEntity<UserVO> register(@RequestBody UserVO userVO) {
+        User user = new User();
+        BeanUtil.copyProperties(userVO,user);
+        String md5Password = DigestUtils.md5DigestAsHex(userVO.getPassword().getBytes());
+        user.setPassword(md5Password);
         userService.save(user);
         return ResponseEntity.ok(userVO);
     }

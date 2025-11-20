@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
-@TableName("user")
+@TableName("Role")
 @Table
 @Data
 public class Role extends BaseEntity implements Serializable {
