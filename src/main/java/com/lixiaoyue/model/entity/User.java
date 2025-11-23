@@ -19,13 +19,15 @@ import java.util.Date;  // JDK8使用java.util.Date（而非LocalDateTime）
 public class User extends BaseEntity{
     @TableId(type = IdType.ASSIGN_ID)  // 自增主键
     @ColumnComment("主键")
-    private Long id;              // 用户ID
+    private Long id;
     @ColumnComment("用户名")
-    private String username;      // 用户名（唯一）
+    private String username;
     @ColumnComment("密码")
-    private String password;      // 密码（实际项目需加密）
+    private String password;
     @ColumnComment("昵称")
-    private String nickname;      // 昵称
+    private String nickname;
     @ColumnComment("年龄")
-    private Integer age;          // 年龄
+    private Integer age;
+    @ColumnComment("角色id")
+    private Long roleId;
 }

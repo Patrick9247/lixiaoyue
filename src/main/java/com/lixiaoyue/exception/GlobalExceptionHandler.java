@@ -1,6 +1,6 @@
 package com.lixiaoyue.exception;
 
-import com.lixiaoyue.common.R;
+import com.lixiaoyue.common.BusinessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,14 +17,14 @@ public class GlobalExceptionHandler {
 
     // 处理业务异常
     @ExceptionHandler(BusinessException.class)
-    public R<Void> handleBusinessException(BusinessException e) {
+    public BusinessResponse<Void> handleBusinessException(BusinessException e) {
         log.error("业务异常：{}", e.getMessage());
-        return R.fail(e.getCode(), e.getMessage());
+        return BusinessResponse.fail(e.getCode(), e.getMessage());
     }
 
     // 处理参数校验异常（@Valid注解触发）
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public R<Void> handleValidException(MethodArgumentNotValidException e) {
+    public BusinessResponse<Void> handleValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         StringBuilder errorMsg = new StringBuilder("参数校验失败：");
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -35,13 +35,13 @@ public class GlobalExceptionHandler {
         }
         String msg = errorMsg.substring(0, errorMsg.length() - 1);
         log.error(msg);
-        return R.fail(400, msg);
+        return BusinessResponse.fail(400, msg);
     }
 
     // 处理其他未知异常
     @ExceptionHandler(Exception.class)
-    public R<Void> handleException(Exception e) {
+    public BusinessResponse<Void> handleException(Exception e) {
         log.error("系统异常：", e);
-        return R.fail("系统内部错误，请联系管理员");
+        return BusinessResponse.fail("系统内部错误，请联系管理员");
     }
 }
