@@ -17,4 +17,7 @@ public class BaseEntity {
     @TableField(fill = FieldFill.INSERT_UPDATE)// 创建时间（JDK8兼容）
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtUpdate;
+    @ColumnComment("逻辑删除")
+    @TableField(fill = FieldFill.INSERT)
+    private int deleted;
 }

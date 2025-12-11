@@ -26,8 +26,21 @@ public class User extends BaseEntity{
     private String password;
     @ColumnComment("昵称")
     private String nickname;
+    @ColumnComment("头像")
+    private String avatar;
+    @ColumnComment("邮箱")
+    private String email;
+    @ColumnComment("描述")
+    private String description;
+    @ColumnComment("电话")
+    private String phone;
     @ColumnComment("年龄")
     private Integer age;
     @ColumnComment("角色id")
     private Long roleId;
+    @ColumnComment("所属班级Id")
+    private Long schoolClassId;
+    @ColumnComment("申请加入班级状态:待审核 / 已通过 / 已拒绝")
+    private int schoolClassStatus;
+
 }
