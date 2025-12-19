@@ -1,13 +1,15 @@
 package com.lixiaoyue.model.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
-public class HomeworkVO implements Serializable {
+public class HomeworkListVO implements Serializable {
 
     @Schema(description = "id")
     private Long id;
@@ -23,8 +25,16 @@ public class HomeworkVO implements Serializable {
     private String courseName;
     @Schema(description = "所属课程id")
     private Long courseId;
-    @Schema(description = "成绩")
-    private String grades;
     @Schema(description = "所发布班级id")
     private Long schoolClassId;
+    @Schema(description = "发布数")
+    private Integer publishCount;
+    @Schema(description = "提交数")
+    private Integer submitCount;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "发布时间")
+    private Date gmtCreate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "截止时间")
+    private Date deadline;
 }

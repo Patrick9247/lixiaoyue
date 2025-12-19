@@ -35,7 +35,8 @@ public class HomeworkDtailController {
 
     @GetMapping("/detail")
     @Operation(summary = "查看作业详情")
-    public BusinessResponse<HomeworkDetailVO> detail(@Param("userId")Long userId) {
-        return null;
+    public BusinessResponse<HomeworkDetailVO> detail(@Param("homeworkId")Long homeworkId,@Param("userId") Long userId) {
+        HomeworkDetailVO homeworkDetail = homeworkDetailService.getHomeworkDetail(homeworkId, userId);
+        return BusinessResponse.success(homeworkDetail);
     }
 }

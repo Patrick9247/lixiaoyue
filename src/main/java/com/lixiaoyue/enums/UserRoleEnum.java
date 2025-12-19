@@ -9,14 +9,14 @@ import lombok.Getter;
 public enum UserRoleEnum {
 
 
-    TEACHER(0,"教师"),
+    TEACHER("STU","教师"),
 
-    STUDENT(1,"学生");
+    STUDENT("TEC","学生");
 
     /**
      * 角色编码
      */
-    private final Integer code;
+    private final String name;
     /**
      * 描述
      */

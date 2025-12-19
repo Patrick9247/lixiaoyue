@@ -1,6 +1,5 @@
-package com.lixiaoyue.model.vo;
+package com.lixiaoyue.model.dto;
 
-import com.tangzc.mpe.autotable.annotation.ColumnComment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -9,9 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class UserVO implements Serializable {
-    @Schema(description = "id")
-    private Long id;
+public class UserRegisterDTO implements Serializable {
+
     @Schema(description = "用户名")
     @NotNull(message = "用户名不能为空")
     private String username;

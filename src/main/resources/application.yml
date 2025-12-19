@@ -25,7 +25,9 @@ server:
 mybatis-plus:
   global-config:
     db-config:
-      id-type: auto     # 可选，主键自增
+      id-type: auto # 可选，主键自增
+      logic-delete-value: 1
+      logic-not-delete-value: 0
   mapper-locations: classpath:mapper/*.xml  # Mapper.xml文件路径（若需）
   type-aliases-package: com.lixiaoyue.model.entity  # 实体类别名包
   configuration:

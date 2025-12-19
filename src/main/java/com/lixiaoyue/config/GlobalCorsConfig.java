@@ -1,4 +1,4 @@
-package com.lixiaoyue.common;
+package com.lixiaoyue.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -20,11 +20,13 @@ public class Course extends BaseEntity implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)  // 自增主键
     @ColumnComment("主键")
-    private Long Id;
+    private Long id;
     @ColumnComment("课程名")
     private String courseName;
     @ColumnComment("负责人Id(教师角色)")
     private Long dutyUserId ;
     @ColumnComment("开设状态:-开设中，-已关闭")
     private Integer status;
+    @ColumnComment("课程描述")
+    private String remark;
 }

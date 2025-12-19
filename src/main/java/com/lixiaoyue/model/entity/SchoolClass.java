@@ -18,11 +18,13 @@ public class SchoolClass extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_ID)  // 自增主键
     @ColumnComment("主键")
-    private Long Id;
+    private Long id;
     @ColumnComment("班级名")
     private String schoolClassName;
     @ColumnComment("负责人Id(教师角色)")
     private Long dutyUserId ;
+    @ColumnComment("负责老师名字(教师角色)")
+    private String dutyUserName ;
     @ColumnComment("开设状态:-开设中，-已关闭")
     private int status;
     @ColumnComment("所属课程名")

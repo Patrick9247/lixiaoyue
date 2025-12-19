@@ -2,6 +2,7 @@ package com.lixiaoyue.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ public class MyBatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 添加分页拦截器，指定数据库类型（DbType 枚举包含主流数据库：MYSQL、ORACLE、POSTGRE_SQL 等）
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        //逻辑删除组件
+        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         return interceptor;
     }
 }

@@ -19,15 +19,21 @@ public class Application extends BaseEntity implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)  // 自增主键
     @ColumnComment("主键")
-    private Long Id;
+    private Long id;
     @ColumnComment("申请加入的班级Id")
     private Long schoolClassId;
+    @ColumnComment("申请加入的班级名称")
+    private String schoolClassName;
+    @ColumnComment("申请加入的课程名称")
+    private String courseName;
     @ColumnComment("申请人Id(学生Id)")
     private Long applicatorId;
+    @ColumnComment("申请人姓名")
+    private String applicatorName;
     @ColumnComment("负责人Id(教师角色)")
     private Long dutyUserId ;
     @ColumnComment("申请状态：未读/未通过/已通过")
-    private int status;
+    private Integer status;
     @ColumnComment("未通过理由")
     private String remark;
 }

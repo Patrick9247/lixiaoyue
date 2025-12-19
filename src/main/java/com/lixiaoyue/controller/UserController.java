@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.exception.BusinessException;
+import com.lixiaoyue.model.dto.UserLoginDTO;
 import com.lixiaoyue.model.dto.UserPageDTO;
+import com.lixiaoyue.model.dto.UserRegisterDTO;
 import com.lixiaoyue.model.entity.User;
+import com.lixiaoyue.model.vo.UserLoginVO;
 import com.lixiaoyue.model.vo.UserUpdateVO;
 import com.lixiaoyue.model.vo.UserVO;
 import com.lixiaoyue.service.IUserService;
@@ -46,7 +49,7 @@ public class UserController {
         userPage.setCurrent(page.getPageNo());
         userPage.setSize(page.getPageSize());
         Page<User> userPages = userService.page(userPage,
-                new LambdaQueryWrapper<User>().eq(page.getRoleId()!=null,User::getRoleId,page.getRoleId())
+                new LambdaQueryWrapper<User>().eq(page.getRoleName()!=null,User::getRoleName,page.getRoleName())
                         .like(page.getUsername() != null,User::getUsername,page.getUsername())
                         .like(page.getNickname() != null,User::getNickname,page.getNickname()));
         List<User> records = userPages.getRecords();
@@ -64,13 +67,23 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "注册")
-    public BusinessResponse<UserVO> register(@RequestBody UserVO userVO) {
+    public BusinessResponse<User> register(@RequestBody UserRegisterDTO userVO) {
         User user = new User();
         BeanUtil.copyProperties(userVO,user);
         String md5Password = DigestUtils.md5DigestAsHex(userVO.getPassword().getBytes());
         user.setPassword(md5Password);
         userService.save(user);
-        return BusinessResponse.success(userVO);
+        return BusinessResponse.success(user);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "登录")
+    public BusinessResponse<UserLoginDTO> login(@RequestBody UserLoginVO loginVO) {
+        UserLoginDTO login = userService.login(loginVO);
+        if (ObjectUtils.isEmpty(login)){
+            throw new BusinessException("登录失败，请联系管理员");
+        }
+        return BusinessResponse.success(login);
     }
 
     @PostMapping("/update")

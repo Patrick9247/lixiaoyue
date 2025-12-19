@@ -6,15 +6,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum HomeworkStatusEnum {
+public enum ApplicationStatusEnum {
 
 
-    UNSUBMITTED(0,"未提交"),
+    PASS(0,"通过"),
 
-    SUBMITTED(1,"已提交");
+    FAIL_PASS(1,"未通过"),
+    PENDING(3,"待处理");
 
     /**
-     * 角色编码
+     * 状态编码
      */
     private final Integer code;
     /**

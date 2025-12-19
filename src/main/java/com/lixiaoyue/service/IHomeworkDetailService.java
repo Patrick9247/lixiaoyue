@@ -11,4 +11,6 @@ public interface IHomeworkDetailService extends IService<HomeworkDetail> {
     Boolean create(Homework homework);
 
     HomeworkDetailVO finish(HomeworkDetailVO homeworkDetailVO);
+
+    HomeworkDetailVO getHomeworkDetail(Long homeworkId, Long userId);
 }

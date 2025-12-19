@@ -1,8 +1,10 @@
 package com.lixiaoyue.controller;
 
+import com.google.common.net.MediaType;
 import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.exception.BusinessException;
 import com.lixiaoyue.model.entity.HomeworkDetail;
+import com.lixiaoyue.model.vo.CourseVO;
 import com.lixiaoyue.model.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,7 @@ public class FileController {
 
     // 文件存储根路径（可配置到application.yml）
     private static final String UPLOAD_DIR = "D:/upload/";
+    private static final String UPLOAD_FILE_FRONT = "file:///";
 
     /**
      * 单文件上传接口
@@ -67,7 +70,7 @@ public class FileController {
             file.transferTo(destFile);
             FileVO fileVO = new FileVO();
             fileVO.setFileName(fileName);
-            fileVO.setPath(UPLOAD_DIR + fileName);
+            fileVO.setPath(UPLOAD_FILE_FRONT+UPLOAD_DIR + fileName);
             fileVO.setFileType(file.getContentType());
 
             //获取文件大小
@@ -80,6 +83,7 @@ public class FileController {
             throw new BusinessException(e.getMessage());
         }
     }
+
 
 //    /**
 //     * 多文件上传接口

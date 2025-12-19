@@ -1,6 +1,7 @@
 package com.lixiaoyue.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lixiaoyue.enums.HomeworkStatusEnum;
 import com.lixiaoyue.mapper.HomeworkDetailMapper;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,18 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
         finish.setId(homeworkDetailVO.getId());
         finish.setStatus(HomeworkStatusEnum.SUBMITTED.getCode());
         finish.setFile(homeworkDetailVO.getFile());
+        finish.setGmtSubmit(new Date());
         this.updateById(finish);
         return BeanUtil.copyProperties(finish,HomeworkDetailVO.class);
+    }
+
+    @Override
+    public HomeworkDetailVO getHomeworkDetail(Long homeworkId, Long userId) {
+        HomeworkDetail homeworkDetail = this.getOne(new LambdaQueryWrapper<HomeworkDetail>().eq(HomeworkDetail::getHomeworkId, homeworkId)
+                .eq(HomeworkDetail::getOwnerId, userId));
+        if (ObjectUtils.isEmpty(homeworkDetail)){
+            return null;
+        }
+        return BeanUtil.copyProperties(homeworkDetail,HomeworkDetailVO.class);
     }
 }

@@ -34,10 +34,12 @@ public class User extends BaseEntity{
     private String description;
     @ColumnComment("电话")
     private String phone;
+    @ColumnComment("学号")
+    private String stuID;
     @ColumnComment("年龄")
     private Integer age;
-    @ColumnComment("角色id")
-    private Long roleId;
+    @ColumnComment("角色名")
+    private String roleName;
     @ColumnComment("所属班级Id")
     private Long schoolClassId;
     @ColumnComment("申请加入班级状态:待审核 / 已通过 / 已拒绝")
