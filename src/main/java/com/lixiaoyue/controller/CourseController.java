@@ -62,12 +62,6 @@ public class CourseController {
         return BusinessResponse.success(page);
     }
 
-    @GetMapping("/teacher/list")
-    @Operation(summary = "分页查询该课程下所有课程列表")
-    public BusinessResponse<PageVO<CourseListVO>> getTeachers(CourseQueryDTO queryDTO) {
-        PageVO<CourseListVO> page = courseService.pageList(queryDTO);
-        return BusinessResponse.success(page);
-    }
 
 
 

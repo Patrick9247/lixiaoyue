@@ -9,6 +9,7 @@ import com.lixiaoyue.model.entity.User;
 import com.lixiaoyue.model.vo.UserLoginVO;
 import com.lixiaoyue.model.vo.UserVO;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IUserService extends IService<User> {
@@ -18,4 +19,6 @@ public interface IUserService extends IService<User> {
     List<UserVO> listBySchoolClassId(Long schoolClassId);
 
     UserLoginDTO login(UserLoginVO loginVO);
+
+    Boolean checkExist(@NotNull(message = "用户名不能为空") String username);
 }

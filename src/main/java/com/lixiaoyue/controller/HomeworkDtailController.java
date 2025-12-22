@@ -2,16 +2,16 @@ package com.lixiaoyue.controller;
 
 
 import com.lixiaoyue.common.BusinessResponse;
+import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
+import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
+import com.lixiaoyue.model.vo.HomeworkDetailPageQueryVO;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
-import com.lixiaoyue.model.vo.HomeworkVO;
 import com.lixiaoyue.service.IHomeworkDetailService;
-import com.lixiaoyue.service.IHomeworkService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,5 +38,12 @@ public class HomeworkDtailController {
     public BusinessResponse<HomeworkDetailVO> detail(@Param("homeworkId")Long homeworkId,@Param("userId") Long userId) {
         HomeworkDetailVO homeworkDetail = homeworkDetailService.getHomeworkDetail(homeworkId, userId);
         return BusinessResponse.success(homeworkDetail);
+    }
+
+    @GetMapping("/myHomeworkList")
+    @Operation(summary = "学生端作业列表")
+    public BusinessResponse<PageVO<HomeworkDetailVO>> list(HomeworkDetailQueryDTO homeworkDetailQueryDTO) {
+        PageVO<HomeworkDetailVO> page = homeworkDetailService.getStudentHomeworkPage(homeworkDetailQueryDTO);
+        return BusinessResponse.success(page);
     }
 }

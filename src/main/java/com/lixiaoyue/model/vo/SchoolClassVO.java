@@ -26,8 +26,10 @@ public class SchoolClassVO implements Serializable {
     private Long dutyUserId ;
     @Schema(description = "负责老师名字(教师角色)")
     private String dutyUserName ;
-    @Schema(description = "学生人数")
-    private Integer studentNum;
+    @Schema(description = "已加入的学生人数")
+    private Integer stuCount;
+    @Schema(description = "限制的学人数")
+    private Integer stuNum;
     @Schema(description = "开设状态:-开设中，-已关闭")
     private int status;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -2,17 +2,17 @@ package com.lixiaoyue.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.enums.HomeworkStatusEnum;
 import com.lixiaoyue.mapper.HomeworkDetailMapper;
-import com.lixiaoyue.mapper.HomeworkMapper;
+import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
 import com.lixiaoyue.model.entity.Homework;
 import com.lixiaoyue.model.entity.HomeworkDetail;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
-import com.lixiaoyue.model.vo.HomeworkVO;
 import com.lixiaoyue.model.vo.UserVO;
 import com.lixiaoyue.service.IHomeworkDetailService;
-import com.lixiaoyue.service.IHomeworkService;
 import com.lixiaoyue.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,5 +77,31 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
             return null;
         }
         return BeanUtil.copyProperties(homeworkDetail,HomeworkDetailVO.class);
+    }
+
+    @Override
+    public PageVO<HomeworkDetailVO> getStudentHomeworkPage(HomeworkDetailQueryDTO homeworkDetailPageQueryVO) {
+        Page<HomeworkDetail> homeworkDetailPage = new Page<HomeworkDetail>(homeworkDetailPageQueryVO.getPageNumber(), homeworkDetailPageQueryVO.getPageSize());
+        LambdaQueryWrapper<HomeworkDetail> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (homeworkDetailPageQueryVO.getHomeworkTitle() != null){
+            lambdaQueryWrapper.like(HomeworkDetail::getHomeworkTitle, homeworkDetailPageQueryVO.getHomeworkTitle());
+        }
+        if (homeworkDetailPageQueryVO.getStatus() != null){
+            lambdaQueryWrapper.eq(HomeworkDetail::getStatus, homeworkDetailPageQueryVO.getStatus());
+        }
+        if (homeworkDetailPageQueryVO.getTeacherUserId() != null){
+            lambdaQueryWrapper.eq(HomeworkDetail::getCreatorId, homeworkDetailPageQueryVO.getTeacherUserId());
+        }
+        lambdaQueryWrapper.eq(HomeworkDetail::getOwnerId,homeworkDetailPageQueryVO.getStudentUserId());
+
+        Page<HomeworkDetail> detailPage = this.page(homeworkDetailPage, lambdaQueryWrapper);
+        PageVO<HomeworkDetailVO> homeworkDetailVOPageVO = new PageVO<>();
+        BeanUtil.copyProperties(detailPage,homeworkDetailVOPageVO);
+
+        List<HomeworkDetail> records = detailPage.getRecords();
+        List<HomeworkDetailVO> homeworkDetailVOS = BeanUtil.copyToList(records, HomeworkDetailVO.class);
+
+        homeworkDetailVOPageVO.setRecords(homeworkDetailVOS);
+        return homeworkDetailVOPageVO;
     }
 }

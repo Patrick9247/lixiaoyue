@@ -72,6 +72,9 @@ public class HomeworkServiceImpl extends ServiceImpl<HomeworkMapper, Homework> i
         if (ObjectUtils.isNotEmpty(queryDTO.getCreatorName())){
             homeworkLambdaQueryWrapper.like(Homework::getCreatorName, queryDTO.getCreatorName());
         }
+        if (ObjectUtils.isNotEmpty(queryDTO.getUserId())){
+            homeworkLambdaQueryWrapper.eq(Homework::getCreatorId, queryDTO.getUserId());
+        }
 
         Page<Homework> homeworkPage = this.page(page, homeworkLambdaQueryWrapper);
         PageVO<HomeworkListVO> homeworkListVOPageVO = new PageVO<>();

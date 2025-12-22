@@ -78,6 +78,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return BeanUtil.copyProperties(one, UserLoginDTO.class);
     }
 
+    @Override
+    public Boolean checkExist(String username) {
+        User user = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        return !ObjectUtils.isEmpty(user);
+    }
+
     private Wrapper<User> getWrapper(UserPageDTO userPageDTO) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         return null;

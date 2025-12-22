@@ -29,6 +29,8 @@ public class SchoolClass extends BaseEntity implements Serializable {
     private int status;
     @ColumnComment("所属课程名")
     private String courseName;
+    @ColumnComment("学生人数限制")
+    private Integer stuNum;
     @ColumnComment("所属课程id")
     private Long courseId;
 }

@@ -17,6 +17,8 @@ public class HomeworkQueryDTO extends PageDTO implements Serializable {
     private String creatorName;
     @Schema(description = "所属课程")
     private String courseName;
+    @Schema(description = "教师id")
+    private Long userId;
     @Schema(description = "所发布班级名称")
     private Long schoolClassName;
 }

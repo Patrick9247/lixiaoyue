@@ -68,6 +68,10 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "注册")
     public BusinessResponse<User> register(@RequestBody UserRegisterDTO userVO) {
+        Boolean b = userService.checkExist(userVO.getUsername());
+        if (b){
+            throw new BusinessException("用户名已存在");
+        }
         User user = new User();
         BeanUtil.copyProperties(userVO,user);
         String md5Password = DigestUtils.md5DigestAsHex(userVO.getPassword().getBytes());

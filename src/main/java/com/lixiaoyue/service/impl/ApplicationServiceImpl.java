@@ -95,6 +95,7 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean apply(Long userId, Long schoolClassId) {
         SchoolClass schoolClass = schoolClassService.getById(schoolClassId);
         User user = userService.getById(userId);
@@ -104,6 +105,13 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         if (ObjectUtils.isEmpty(schoolClass)){
             return false;
         }
+        Application one = this.getOne(new LambdaQueryWrapper<Application>()
+                .eq(Application::getApplicatorId, userId)
+                .eq(Application::getSchoolClassId, schoolClassId));
+        if (!ObjectUtils.isEmpty(one)){
+            throw new BusinessException("已提交申请请勿重复申请");
+        }
+
         Application application = new Application();
         application.setDutyUserId(schoolClass.getDutyUserId());
         application.setApplicatorId(userId);

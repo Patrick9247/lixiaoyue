@@ -123,11 +123,20 @@ public class SchoolClassServiceImpl extends ServiceImpl<SchoolClassMapper, Schoo
         Page<SchoolClass> schoolClassPage = this.page(page, schoolClassLambdaQueryWrapper);
         List<SchoolClass> records = schoolClassPage.getRecords();
         List<SchoolClassVO> schoolClassVOS = BeanUtil.copyToList(records, SchoolClassVO.class);
+        countJoinNum(schoolClassVOS);
 
         PageVO<SchoolClassVO> pageVO = new PageVO<>();
         BeanUtil.copyProperties(schoolClassPage, pageVO);
         pageVO.setRecords(schoolClassVOS);
         return pageVO;
+    }
+
+    private void countJoinNum(List<SchoolClassVO> schoolClassVOS) {
+        for (SchoolClassVO schoolClassVO : schoolClassVOS) {
+            Long schoolClassVOId = schoolClassVO.getId();
+            Integer stuCount = userSchoolClassService.countStudentBySchoolClassId(schoolClassVOId);
+            schoolClassVO.setStuCount(stuCount);
+        }
     }
 
     @Override
@@ -144,7 +153,7 @@ public class SchoolClassServiceImpl extends ServiceImpl<SchoolClassMapper, Schoo
         if (ObjectUtils.isNotEmpty(queryDTO.getStuID())){
             userLambdaQueryWrapper.eq(User::getStuID, queryDTO.getStuID());
         }
-
+        userLambdaQueryWrapper.in(User::getId, userIds);
 
         Page<User> page = userService.page(userPage, userLambdaQueryWrapper);
         PageVO<UserStudentVO> userStudentPageVO = new PageVO<>();
