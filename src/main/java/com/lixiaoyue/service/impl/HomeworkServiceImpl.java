@@ -99,8 +99,10 @@ public class HomeworkServiceImpl extends ServiceImpl<HomeworkMapper, Homework> i
         save.setId(homeworkDetail.getId());
         save.setGmtCheck(new Date());
         save.setGrades(checkVO.getGrades());
+        save.setRemark(checkVO.getRemark());
         homeworkDetail.setGrades(save.getGrades());
         homeworkDetail.setGmtCheck(save.getGmtCheck());
+        homeworkDetail.setRemark(checkVO.getRemark());
         homeworkDetailService.updateById(save);
         return homeworkDetail;
     }
@@ -112,7 +114,7 @@ public class HomeworkServiceImpl extends ServiceImpl<HomeworkMapper, Homework> i
             long total = homeworkDetails.stream().count();
             long finish = homeworkDetails
                     .stream()
-                    .filter(homeworkDetail -> homeworkDetail.getStatus().equals(HomeworkStatusEnum.SUBMITTED.getCode()))
+                    .filter(homeworkDetail -> homeworkDetail.getStatus().equals(HomeworkStatusEnum.AI_CORRECT.getCode()))
                     .count();
             homeworkListVO.setPublishCount((int)total);
             homeworkListVO.setSubmitCount((int)finish);

@@ -16,7 +16,7 @@ public interface IUserService extends IService<User> {
 
     Page<UserVO> pageUserVO(UserPageDTO userPageDTO);
 
-    List<UserVO> listBySchoolClassId(Long schoolClassId);
+    List<Long> listBySchoolClassId(Long schoolClassId);
 
     UserLoginDTO login(UserLoginVO loginVO);
 

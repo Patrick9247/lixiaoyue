@@ -2,7 +2,6 @@ package com.lixiaoyue.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lixiaoyue.common.PageVO;
@@ -11,6 +10,7 @@ import com.lixiaoyue.exception.BusinessException;
 import com.lixiaoyue.mapper.ApplicationMapper;
 import com.lixiaoyue.model.dto.ApplicationDTO;
 import com.lixiaoyue.model.dto.ApplicationQueryDTO;
+import com.lixiaoyue.model.dto.SchoolClassJoinDTO;
 import com.lixiaoyue.model.entity.Application;
 import com.lixiaoyue.model.entity.SchoolClass;
 import com.lixiaoyue.model.entity.User;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,18 +41,21 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         if (application == null) {
             throw new BusinessException("当前申请不存在！");
         }
+        Long userId = application.getApplicatorId();
+        Long schoolClassId = application.getSchoolClassId();
         Application application1 = new Application();
         application1.setId(applicationDTO.getId());
         if (applicationDTO.getIsPass()){
             application1.setStatus(ApplicationStatusEnum.PASS.getCode());
+            schoolClassService.join(userId, schoolClassId);
         }else {
             application1.setStatus(ApplicationStatusEnum.FAIL_PASS.getCode());
             application1.setRemark(applicationDTO.getRemark());
         }
         boolean b = this.updateById(application1);
         //绑定学生id至学生-班级表
-        if (b){
-
+        if (!b){
+            throw new BusinessException("处理失败！");
         }
         return true;
     }
@@ -96,7 +98,9 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean apply(Long userId, Long schoolClassId) {
+    public Boolean apply(SchoolClassJoinDTO schoolClassJoinDTO) {
+        Long userId = schoolClassJoinDTO.getUserId();
+        Long schoolClassId = schoolClassJoinDTO.getSchoolClassId();
         SchoolClass schoolClass = schoolClassService.getById(schoolClassId);
         User user = userService.getById(userId);
         if (ObjectUtils.isEmpty(user)){
@@ -114,13 +118,14 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
 
         Application application = new Application();
         application.setDutyUserId(schoolClass.getDutyUserId());
+        application.setApplicatorName(user.getNickname());
+        application.setStatus(ApplicationStatusEnum.PASS.getCode());
         application.setApplicatorId(userId);
         application.setStatus(ApplicationStatusEnum.PENDING.getCode());
         application.setSchoolClassId(schoolClassId);
         application.setApplicatorName(user.getUsername());
         application.setCourseName(schoolClass.getCourseName());
         application.setSchoolClassName(schoolClass.getSchoolClassName());
-        this.save(application);
-        return true;
+        return this.save(application);
     }
 }

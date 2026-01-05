@@ -8,10 +8,12 @@ import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.enums.HomeworkStatusEnum;
 import com.lixiaoyue.mapper.HomeworkDetailMapper;
 import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
+import com.lixiaoyue.model.dto.HomeworkStudentQueryDTO;
+import com.lixiaoyue.model.dto.StudentHomeworkUserDTO;
 import com.lixiaoyue.model.entity.Homework;
 import com.lixiaoyue.model.entity.HomeworkDetail;
+import com.lixiaoyue.model.entity.User;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
-import com.lixiaoyue.model.vo.UserVO;
 import com.lixiaoyue.service.IHomeworkDetailService;
 import com.lixiaoyue.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,16 +37,16 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
     @Transactional(rollbackFor = Exception.class)
     public Boolean create(Homework homework) {
         //查出所有学生id
-        List<UserVO> userVOS = userService.listBySchoolClassId(homework.getSchoolClassId());
-        if (userVOS.isEmpty()){
+        List<Long> users = userService.listBySchoolClassId(homework.getSchoolClassId());
+        if (users.isEmpty()){
             return true;
         }
-        List<HomeworkDetail> homeworkDetailList = userVOS.stream().map(userVO -> {
+        List<HomeworkDetail> homeworkDetailList = users.stream().map(userId -> {
             HomeworkDetail homeworkDetail = new HomeworkDetail();
             homeworkDetail.setCreatorId(homework.getCreatorId());
             homeworkDetail.setHomeworkId(homework.getId());
             homeworkDetail.setHomeworkTitle(homework.getTitle());
-            homeworkDetail.setOwnerId(userVO.getId());
+            homeworkDetail.setOwnerId(userId);
             homeworkDetail.setStatus(HomeworkStatusEnum.UNSUBMITTED.getCode());
             return homeworkDetail;
         }).collect(Collectors.toList());
@@ -57,12 +60,12 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
         if (ObjectUtils.isEmpty(homeworkDetailVO)){
             return null;
         }
-        if (homeworkDetail.getStatus().equals(HomeworkStatusEnum.SUBMITTED.getCode())){
+        if (homeworkDetail.getStatus().equals(HomeworkStatusEnum.AI_CORRECT.getCode())){
             return homeworkDetailVO;
         }
         HomeworkDetail finish  = new HomeworkDetail();
         finish.setId(homeworkDetailVO.getId());
-        finish.setStatus(HomeworkStatusEnum.SUBMITTED.getCode());
+        finish.setStatus(HomeworkStatusEnum.AI_CORRECT.getCode());
         finish.setFile(homeworkDetailVO.getFile());
         finish.setGmtSubmit(new Date());
         this.updateById(finish);
@@ -104,4 +107,45 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
         homeworkDetailVOPageVO.setRecords(homeworkDetailVOS);
         return homeworkDetailVOPageVO;
     }
+
+    @Override
+    public PageVO<StudentHomeworkUserDTO> getUserPageByHomework(HomeworkStudentQueryDTO homeworkStudentQueryDTO) {
+        Page<HomeworkDetail> homeworkDetailPage = new Page<HomeworkDetail>(homeworkStudentQueryDTO.getPageNumber(), homeworkStudentQueryDTO.getPageSize());
+        LambdaQueryWrapper<HomeworkDetail> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (homeworkStudentQueryDTO.getHomeworkId() != null){
+            lambdaQueryWrapper.eq(HomeworkDetail::getHomeworkId, homeworkStudentQueryDTO.getHomeworkId());
+        }
+        if (homeworkStudentQueryDTO.getStatus() != null){
+            lambdaQueryWrapper.eq(HomeworkDetail::getStatus, homeworkStudentQueryDTO.getStatus());
+        }
+
+        Page<HomeworkDetail> detailPage = this.page(homeworkDetailPage, lambdaQueryWrapper);
+
+        List<HomeworkDetail> records = detailPage.getRecords();
+        List<StudentHomeworkUserDTO> studentHomeworkUserDTOS = new ArrayList<>();
+        records.forEach(homeworkDetail -> {
+            Long ownerId = homeworkDetail.getOwnerId();
+            User byId = userService.getById(ownerId);
+            StudentHomeworkUserDTO studentHomeworkUserDTO = new StudentHomeworkUserDTO();
+            studentHomeworkUserDTO.setHomeworkId(homeworkDetail.getHomeworkId());
+            studentHomeworkUserDTO.setUserName(byId.getUsername());
+            studentHomeworkUserDTO.setUserId(ownerId);
+            studentHomeworkUserDTO.setStatus(homeworkDetail.getStatus());
+            studentHomeworkUserDTO.setGrades(homeworkDetail.getGrades());
+            studentHomeworkUserDTO.setHomeworkTitle(homeworkDetail.getHomeworkTitle());
+            studentHomeworkUserDTO.setFile(homeworkDetail.getFile());
+            studentHomeworkUserDTO.setDevice(homeworkDetail.getDevice());
+            studentHomeworkUserDTO.setGmtCheck(homeworkDetail.getGmtCheck());
+            studentHomeworkUserDTO.setGmtSubmit(homeworkDetail.getGmtSubmit());
+            studentHomeworkUserDTO.setSize(homeworkDetail.getSize());
+            studentHomeworkUserDTO.setRemark(homeworkDetail.getRemark());
+            studentHomeworkUserDTOS.add(studentHomeworkUserDTO);
+        });
+
+        PageVO<StudentHomeworkUserDTO> studentHomeworkUserDTOPageVO = new PageVO<StudentHomeworkUserDTO>();
+        BeanUtil.copyProperties(detailPage,studentHomeworkUserDTOPageVO);
+        studentHomeworkUserDTOPageVO.setRecords(studentHomeworkUserDTOS);
+        return studentHomeworkUserDTOPageVO;
+    }
+
 }

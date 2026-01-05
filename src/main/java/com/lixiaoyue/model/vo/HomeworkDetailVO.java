@@ -16,7 +16,7 @@ public class HomeworkDetailVO implements Serializable {
     @Schema(description = "文件地址")
     private String file;
     @Schema(description = "作业名称")
-    private String name;
+    private String homeworkTitle;
     @Schema(description = "作业所属学生id")
     private String ownerId;
     @Schema(description = "成绩")

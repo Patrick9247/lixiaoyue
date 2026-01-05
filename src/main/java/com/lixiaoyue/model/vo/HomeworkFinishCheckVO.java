@@ -13,6 +13,7 @@ public class HomeworkFinishCheckVO implements Serializable {
     private Long homeworkId;
     @Schema(description = "作业所属学生id")
     private Long ownerId;
+    private String remark;
     @Schema(description = "成绩")
     private String grades;
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class ApplicationVO implements Serializable {
 
     @Schema(description = "主键")
-    private Long Id;
+    private Long id;
     @Schema(description = "申请加入的班级Id")
     private Long schoolClassId;
     @Schema(description = "申请加入的班级名称")

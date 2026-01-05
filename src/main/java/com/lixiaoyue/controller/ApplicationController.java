@@ -38,14 +38,4 @@ public class ApplicationController {
     }
 
 
-    @PostMapping("/apply")
-    @Operation(summary = "学生提交申请")
-    public BusinessResponse<Boolean> apply(@Param("userId")Long userId, @Param("schoolClassId") Long schoolClassId) {
-        Boolean apply = applicationService.apply(userId,schoolClassId);
-        if (!apply){
-            throw new BusinessException("申请失败，请联系管理员！");
-        }
-        return BusinessResponse.success(apply);
-    }
-
 }

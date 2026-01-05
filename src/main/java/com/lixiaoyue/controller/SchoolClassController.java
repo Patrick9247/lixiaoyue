@@ -4,19 +4,14 @@ package com.lixiaoyue.controller;
 import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
-import com.lixiaoyue.model.dto.CourseQueryDTO;
-import com.lixiaoyue.model.dto.MySchoolClassQueryDTO;
-import com.lixiaoyue.model.dto.SchoolClassQueryDTO;
-import com.lixiaoyue.model.dto.SchoolClassStudentQueryDTO;
+import com.lixiaoyue.model.dto.*;
 import com.lixiaoyue.model.vo.SchoolClassVO;
 import com.lixiaoyue.model.vo.UserStudentVO;
-import com.lixiaoyue.model.vo.UserVO;
+import com.lixiaoyue.service.IApplicationService;
 import com.lixiaoyue.service.ISchoolClassService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +24,8 @@ public class SchoolClassController {
 
     @Autowired
     ISchoolClassService schoolClassService;
+    @Autowired
+    IApplicationService applicationService;
 
     @PostMapping("/create")
     @Operation(summary = "创建班级")
@@ -40,11 +37,13 @@ public class SchoolClassController {
         return BusinessResponse.success(created);
     }
 
-    @PostMapping("/join")
-    @Operation(summary = "加入班级")
-    public BusinessResponse<Boolean> join(@Param("schoolClassId")@Schema(description = "班级的id") Long schoolClassId,
-                                              @Param("userId")@Schema(description = "学生的用户id") Long userId) {
-        Boolean join = schoolClassService.join(schoolClassId, userId);
+
+    @PostMapping("/apply")
+    @Operation(summary = "学生申请加入班级")
+    public BusinessResponse<Boolean> applySchoolClass( @RequestBody SchoolClassJoinDTO schoolClassJoinDTO) {
+        Long userId = schoolClassJoinDTO.getUserId();
+        Long schoolClassId = schoolClassJoinDTO.getSchoolClassId();
+        Boolean join = applicationService.apply(schoolClassJoinDTO);
         if (!join) {
             log.error("加入班级失败，传入userId:{},传入班级Id:{}", userId, schoolClassId);
             throw new BusinessException("加入班级失败！");

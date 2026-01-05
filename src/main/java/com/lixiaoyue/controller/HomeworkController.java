@@ -5,10 +5,14 @@ import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
 import com.lixiaoyue.model.dto.HomeworkQueryDTO;
+import com.lixiaoyue.model.dto.HomeworkStudentQueryDTO;
+import com.lixiaoyue.model.dto.StudentHomeworkUserDTO;
+import com.lixiaoyue.model.entity.Homework;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
 import com.lixiaoyue.model.vo.HomeworkFinishCheckVO;
 import com.lixiaoyue.model.vo.HomeworkListVO;
 import com.lixiaoyue.model.vo.HomeworkVO;
+import com.lixiaoyue.service.IHomeworkDetailService;
 import com.lixiaoyue.service.IHomeworkService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +27,8 @@ public class HomeworkController {
 
     @Autowired
     IHomeworkService homeworkService;
+    @Autowired
+    IHomeworkDetailService homeworkDetailService;
 
     @PostMapping("/publish")
     @Operation(summary = "发布作业")
@@ -32,6 +38,25 @@ public class HomeworkController {
         throw new BusinessException("发布失败，请重试！");
         }
         return BusinessResponse.success(published);
+    }
+
+    @PostMapping("/delete/{homeworkId}")
+    @Operation(summary = "删除作业")
+    public BusinessResponse<Boolean> delete(@PathVariable("homeworkId" ) Long homeworkId) {
+        Homework homework = new Homework();
+        homework.setId(homeworkId);
+        boolean b = homeworkService.removeById(homework);
+        if (!b) {
+            throw new BusinessException("删除失败！");
+        }
+        return BusinessResponse.success(b);
+    }
+
+    @GetMapping("/studentByHomework/page")
+    @Operation(summary = "根据作业id查询学生用户")
+    public BusinessResponse<PageVO<StudentHomeworkUserDTO>> studentPage(HomeworkStudentQueryDTO homeworkStudentQueryDTO) {
+        PageVO<StudentHomeworkUserDTO> userPageByHomework = homeworkDetailService.getUserPageByHomework(homeworkStudentQueryDTO);
+        return BusinessResponse.success(userPageByHomework);
     }
 
     @GetMapping("/list")

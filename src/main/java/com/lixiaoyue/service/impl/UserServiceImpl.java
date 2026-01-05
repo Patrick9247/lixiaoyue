@@ -14,8 +14,10 @@ import com.lixiaoyue.mapper.UserMapper;
 import com.lixiaoyue.model.dto.UserLoginDTO;
 import com.lixiaoyue.model.dto.UserPageDTO;
 import com.lixiaoyue.model.entity.User;
+import com.lixiaoyue.model.entity.UserSchoolClass;
 import com.lixiaoyue.model.vo.UserLoginVO;
 import com.lixiaoyue.model.vo.UserVO;
+import com.lixiaoyue.service.IUserSchoolClassService;
 import com.lixiaoyue.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import org.springframework.util.DigestUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,6 +33,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    IUserSchoolClassService userSchoolClassService;
 
     @Override
     public Page<UserVO> pageUserVO(UserPageDTO userPageDTO) {
@@ -51,12 +56,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public List<UserVO> listBySchoolClassId(Long schoolClassId) {
-        List<User> users = userMapper.selectList(new QueryWrapper<User>().eq("school_class_id", schoolClassId));
-        if (CollectionUtil.isEmpty(users)){
+    public List<Long> listBySchoolClassId(Long schoolClassId) {
+        List<UserSchoolClass> userSchoolClassList = userSchoolClassService.list(new LambdaQueryWrapper<UserSchoolClass>().eq(UserSchoolClass::getSchoolClassId, schoolClassId));
+        if (CollectionUtil.isEmpty(userSchoolClassList)){
             return Collections.emptyList();
         }
-        return BeanUtil.copyToList(users, UserVO.class);
+        List<Long> userIds = userSchoolClassList.stream().map(UserSchoolClass::getUserId).collect(Collectors.toList());
+        return userIds;
     }
 
     @Override

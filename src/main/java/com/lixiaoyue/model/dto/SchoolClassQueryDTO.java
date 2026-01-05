@@ -15,4 +15,6 @@ public class SchoolClassQueryDTO extends PageDTO implements Serializable {
     private String courseName;
     @Schema(description = "课程id")
     private Long courseId;
+    @Schema(description = "教师id")
+    private Long userId;
 }

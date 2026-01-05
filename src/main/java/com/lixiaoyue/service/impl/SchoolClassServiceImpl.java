@@ -86,6 +86,9 @@ public class SchoolClassServiceImpl extends ServiceImpl<SchoolClassMapper, Schoo
         if (ObjectUtils.isNotEmpty(queryDTO.getCourseId())){
             schoolClassLambdaQueryWrapper.eq(SchoolClass::getCourseId, queryDTO.getCourseId());
         }
+        if (ObjectUtils.isNotEmpty(queryDTO.getUserId())){
+            schoolClassLambdaQueryWrapper.eq(SchoolClass::getDutyUserId, queryDTO.getUserId());
+        }
 
         Page<SchoolClass> schoolClassPage = this.page(page, schoolClassLambdaQueryWrapper);
 
