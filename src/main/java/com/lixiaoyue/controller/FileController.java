@@ -54,6 +54,8 @@ public class FileController {
 
     @Autowired
     IHomeworkDetailService homeworkDetailService;
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     // 文件存储根路径（可配置到application.yml）
     private static final String UPLOAD_DIR = "D:/upload/";
@@ -83,39 +85,37 @@ public class FileController {
             throw new BusinessException("文件为空！");
         }
 
-        // 2. 创建存储目录（不存在则创建）
-        File uploadDirFile = new File(UPLOAD_DIR);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
 
-        // 3. 处理文件名（避免重复，用UUID+原文件名）
-        String originalFilename = file.getOriginalFilename();
-        String fileName = UUID.randomUUID() + "_" + originalFilename;
-        File destFile = new File(UPLOAD_DIR + fileName);
+        log.info("文件上传：{}",file);
 
-        // 4. 写入文件到指定路径
         try {
-            file.transferTo(destFile);
-            FileVO fileVO = new FileVO();
-            fileVO.setFileName(fileName);
-            fileVO.setPath(UPLOAD_FILE_FRONT+UPLOAD_DIR + fileName);
-            fileVO.setFileType(file.getContentType());
+            //原始文件名
+            String originalFilename = file.getOriginalFilename();
+            //截取原始文件名的后缀   dfdfdf.png
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            //构造新文件名称：防止上传到阿里云的文件，因为名字重复导致覆盖的问题
+            String objectName = UUID.randomUUID().toString() + extension;
 
-            //获取文件大小
-            long size = file.getSize();
-            double sizeInKB= size/1024.0;
-            fileVO.setFileSize(String.format("%.2f", sizeInKB));
+            //文件的请求路径
+            //参数：  byte数组，文件对象转成的数组     传上去的图片在阿里云存储空间里面的名字
+            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+            FileVO fileVO = new FileVO();
+            fileVO.setFileName(objectName);
+            fileVO.setPath(filePath);
+            fileVO.setFileType(file.getContentType());
+            fileVO.setFileSize(String.valueOf(file.getSize()/1024));
             return BusinessResponse.success(fileVO);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new BusinessException(e.getMessage());
+            log.error("文件上传失败：{}", e);
         }
+
+        return BusinessResponse.fail("文件上传失败，请重试！");
     }
     /**
      * 上传文件进行批改
      */
     @PostMapping(value = "/upload/file", consumes = "multipart/form-data")
+    @Deprecated
     @Operation(
             summary = "上传文件到百炼（调试中）",
             description = "支持jpg/png/pdf等格式，单个文件大小限制10MB"
@@ -228,7 +228,7 @@ public class FileController {
 
         return bailianChatData.getData();
     }
-
+    @Deprecated
     @PostMapping(value = "/upload/correct", consumes = "multipart/form-data")
     @Operation(
             summary = "上传文件进行批改（调试中）",
@@ -337,6 +337,7 @@ public class FileController {
     /**
      * 上传文件进行批改
      */
+    @Deprecated
     @PostMapping(value = "/create/chat")
     @Operation(
             summary = "创建对话（调试中）"

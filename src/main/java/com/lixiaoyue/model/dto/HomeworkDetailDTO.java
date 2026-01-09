@@ -1,18 +1,15 @@
-package com.lixiaoyue.model.vo;
+package com.lixiaoyue.model.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
-public class HomeworkDetailVO implements Serializable {
+public class HomeworkDetailDTO implements Serializable {
 
-    @Schema(description = "作业详情主键id")
-    private Long id;
+
     @Schema(description = "文件地址")
     private String file;
     @Schema(description = "作业名称")

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.enums.HomeworkStatusEnum;
 import com.lixiaoyue.mapper.HomeworkDetailMapper;
+import com.lixiaoyue.model.dto.HomeworkDetailDTO;
 import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
 import com.lixiaoyue.model.dto.HomeworkStudentQueryDTO;
 import com.lixiaoyue.model.dto.StudentHomeworkUserDTO;
@@ -55,21 +56,35 @@ public class HomeworkDetailServiceImpl extends ServiceImpl<HomeworkDetailMapper,
     }
 
     @Override
-    public HomeworkDetailVO finish(HomeworkDetailVO homeworkDetailVO) {
-        HomeworkDetail homeworkDetail = this.getById(homeworkDetailVO.getId());
-        if (ObjectUtils.isEmpty(homeworkDetailVO)){
+    public HomeworkDetailVO finish(HomeworkDetailDTO homeworkDetailDTO) {
+        HomeworkDetail homeworkDetail = this.getOne(new LambdaQueryWrapper<HomeworkDetail>()
+                .eq(HomeworkDetail::getHomeworkId, homeworkDetailDTO.getHomeworkId())
+                .eq(HomeworkDetail::getOwnerId,homeworkDetailDTO.getOwnerId()));
+        if (ObjectUtils.isEmpty(homeworkDetailDTO)){
             return null;
         }
         if (homeworkDetail.getStatus().equals(HomeworkStatusEnum.AI_CORRECT.getCode())){
-            return homeworkDetailVO;
+            return BeanUtil.copyProperties(homeworkDetail, HomeworkDetailVO.class);
         }
-        HomeworkDetail finish  = new HomeworkDetail();
-        finish.setId(homeworkDetailVO.getId());
-        finish.setStatus(HomeworkStatusEnum.AI_CORRECT.getCode());
-        finish.setFile(homeworkDetailVO.getFile());
-        finish.setGmtSubmit(new Date());
+        HomeworkDetail finish = getHomeworkDetail(homeworkDetailDTO,homeworkDetail.getId());
         this.updateById(finish);
         return BeanUtil.copyProperties(finish,HomeworkDetailVO.class);
+    }
+
+    private static HomeworkDetail getHomeworkDetail(HomeworkDetailDTO homeworkDetailDTO,Long homeworkDetailId) {
+        HomeworkDetail finish  = new HomeworkDetail();
+        finish.setId(homeworkDetailId);
+        finish.setStatus(HomeworkStatusEnum.AI_CORRECT.getCode());
+        finish.setFile(homeworkDetailDTO.getFile());
+        finish.setHomeworkTitle(homeworkDetailDTO.getHomeworkTitle());
+        finish.setGrades(homeworkDetailDTO.getGrades());
+        finish.setRemark(homeworkDetailDTO.getRemark());
+        finish.setDevice(homeworkDetailDTO.getDevice());
+        finish.setSize(homeworkDetailDTO.getSize());
+        finish.setOwnerId(homeworkDetailDTO.getOwnerId());
+        finish.setGmtSubmit(new Date());
+        finish.setGmtCheck(new Date());
+        return finish;
     }
 
     @Override

@@ -4,6 +4,7 @@ package com.lixiaoyue.controller;
 import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
+import com.lixiaoyue.model.dto.HomeworkDetailDTO;
 import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
 import com.lixiaoyue.model.vo.HomeworkDetailPageQueryVO;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
@@ -25,8 +26,8 @@ public class HomeworkDtailController {
 
     @PostMapping("/doHomework")
     @Operation(summary = "完成作业")
-    public BusinessResponse<HomeworkDetailVO> doHomework(@RequestBody HomeworkDetailVO homeworkDetailVO) {
-        HomeworkDetailVO finish = homeworkDetailService.finish(homeworkDetailVO);
+    public BusinessResponse<HomeworkDetailVO> doHomework(@RequestBody HomeworkDetailDTO homeworkDetailDTO) {
+        HomeworkDetailVO finish = homeworkDetailService.finish(homeworkDetailDTO);
         if (finish == null) {
         throw new BusinessException("发布失败，请重试！");
         }

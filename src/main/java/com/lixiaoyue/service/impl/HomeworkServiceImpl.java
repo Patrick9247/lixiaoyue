@@ -101,7 +101,6 @@ public class HomeworkServiceImpl extends ServiceImpl<HomeworkMapper, Homework> i
         save.setGrades(checkVO.getGrades());
         save.setRemark(checkVO.getRemark());
         homeworkDetail.setGrades(save.getGrades());
-        homeworkDetail.setGmtCheck(save.getGmtCheck());
         homeworkDetail.setRemark(checkVO.getRemark());
         homeworkDetailService.updateById(save);
         return homeworkDetail;

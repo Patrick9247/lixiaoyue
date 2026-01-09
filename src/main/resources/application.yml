@@ -35,3 +35,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印SQL日志
 
 
+lixiaoyue:
+  alioss:
+    endpoint: oss-cn-chengdu.aliyuncs.com  # 根据实际创建的地域填写
+    access-key-id: LTAI5t8LuuyuQGoJTJduwKr8      # 替换为你的AccessKey ID
+    access-key-secret: hcxY3sPguZ1mEcVrTxMSKz4FJea4sd  # 替换为你的AccessKey Secret
+    bucket-name: lixiaoyue         # 替换为你的Bucket名称
