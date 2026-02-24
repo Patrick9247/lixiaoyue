@@ -21,6 +21,8 @@ public class HomeworkDetailVO implements Serializable {
     private Long ownerId;
     @Schema(description = "成绩")
     private String grades;
+    @Schema(description = "作业内容")
+    private String content;
     @Schema(description = "教师评语")
     private String remark;
     @Schema(description = "文件大小")

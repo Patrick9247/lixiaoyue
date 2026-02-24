@@ -16,6 +16,7 @@ import com.lixiaoyue.model.entity.HomeworkDetail;
 import com.lixiaoyue.model.entity.User;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
 import com.lixiaoyue.service.IHomeworkDetailService;
+import com.lixiaoyue.service.IHomeworkService;
 import com.lixiaoyue.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

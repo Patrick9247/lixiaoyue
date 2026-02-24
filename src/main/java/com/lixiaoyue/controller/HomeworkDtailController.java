@@ -6,9 +6,11 @@ import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
 import com.lixiaoyue.model.dto.HomeworkDetailDTO;
 import com.lixiaoyue.model.dto.HomeworkDetailQueryDTO;
+import com.lixiaoyue.model.entity.Homework;
 import com.lixiaoyue.model.vo.HomeworkDetailPageQueryVO;
 import com.lixiaoyue.model.vo.HomeworkDetailVO;
 import com.lixiaoyue.service.IHomeworkDetailService;
+import com.lixiaoyue.service.IHomeworkService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.ibatis.annotations.Param;
@@ -23,6 +25,8 @@ public class HomeworkDtailController {
 
     @Autowired
     IHomeworkDetailService homeworkDetailService;
+    @Autowired
+    IHomeworkService homeworkService;
 
     @PostMapping("/doHomework")
     @Operation(summary = "完成作业")
@@ -38,6 +42,8 @@ public class HomeworkDtailController {
     @Operation(summary = "查看作业详情")
     public BusinessResponse<HomeworkDetailVO> detail(@Param("homeworkId")Long homeworkId,@Param("userId") Long userId) {
         HomeworkDetailVO homeworkDetail = homeworkDetailService.getHomeworkDetail(homeworkId, userId);
+        Homework byId = homeworkService.getById(homeworkId);
+        homeworkDetail.setContent(byId.getContent());
         return BusinessResponse.success(homeworkDetail);
     }
 

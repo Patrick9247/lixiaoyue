@@ -1,6 +1,8 @@
 package com.lixiaoyue.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lixiaoyue.common.BusinessResponse;
 import com.lixiaoyue.common.PageVO;
 import com.lixiaoyue.exception.BusinessException;
@@ -8,14 +10,12 @@ import com.lixiaoyue.model.dto.HomeworkQueryDTO;
 import com.lixiaoyue.model.dto.HomeworkStudentQueryDTO;
 import com.lixiaoyue.model.dto.StudentHomeworkUserDTO;
 import com.lixiaoyue.model.entity.Homework;
-import com.lixiaoyue.model.vo.HomeworkDetailVO;
-import com.lixiaoyue.model.vo.HomeworkFinishCheckVO;
-import com.lixiaoyue.model.vo.HomeworkListVO;
-import com.lixiaoyue.model.vo.HomeworkVO;
+import com.lixiaoyue.model.vo.*;
 import com.lixiaoyue.service.IHomeworkDetailService;
 import com.lixiaoyue.service.IHomeworkService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +57,14 @@ public class HomeworkController {
     public BusinessResponse<PageVO<StudentHomeworkUserDTO>> studentPage(HomeworkStudentQueryDTO homeworkStudentQueryDTO) {
         PageVO<StudentHomeworkUserDTO> userPageByHomework = homeworkDetailService.getUserPageByHomework(homeworkStudentQueryDTO);
         return BusinessResponse.success(userPageByHomework);
+    }
+
+    @GetMapping("{homeworkId}")
+    @Operation(summary = "根据作业id查询布置的作业")
+    public BusinessResponse<HomeworkTeacherVO> get(@PathVariable("homeworkId") Long homeworkId) {
+        Homework byId = homeworkService.getById(homeworkId);
+        HomeworkTeacherVO homeworkTeacherVO = BeanUtil.copyProperties(byId, HomeworkTeacherVO.class);
+        return BusinessResponse.success(homeworkTeacherVO);
     }
 
     @GetMapping("/list")
